@@ -1,0 +1,42 @@
+{
+  "name": "cropshield",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "node --import tsx prisma/seedWorkspace.ts",
+    "test": "node --import tsx --test src/lib/__tests__/*.test.ts",
+    "db:workspace:seed": "node --import tsx prisma/seedWorkspace.ts",
+    "db:migrate": "prisma migrate deploy"
+  },
+  "prisma": {
+    "seed": "node --import tsx prisma/seedWorkspace.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.24.0",
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "lucide-react": "^1.48.0",
+    "next": "14.2.35",
+    "next-auth": "^5.0.0-beta.32",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "postcss": "^8",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}
