@@ -1,10 +1,13 @@
-# CropShield
+# CropShield: A Web-Based Crop Disease Screening and Monitoring System
 
-Photo-first crop disease and pest screening, with dated monitoring records for Ja-ron Fish Farm, Solana, Cagayan. Built with Next.js, TypeScript, Tailwind CSS, Prisma, MySQL, Auth.js, and the server-side Gemini SDK.
+CropShield helps the owners and workers of Ja-ron Fish Farm in Solana, Cagayan screen possible crop diseases and pests using photographs and visible symptoms. It links preliminary findings to referenced guidance and keeps dated follow-ups for the same plant or crop area.
+
+Built with Next.js, TypeScript, Tailwind CSS, Prisma, MySQL, Auth.js, and the server-side Gemini SDK.
 
 ## Group members
 
-Add your capstone group members here before submission. Names were not supplied in the project request.
+- Yohann Tomas
+- Aaron Pocot
 
 ## Accounts and roles
 
@@ -18,7 +21,13 @@ Users log in with an email and password and log out from **Your account**. There
 
 Every protected page rechecks the current database account and role. An anonymous request redirects to `/login`; a wrong-role page redirects to `/access-denied`. API requests independently return 401/403 or scoped records. Passwords use bcrypt hashes. Earlier role-switch sessions are rejected, and signing out removes the login session. Existing real-user passwords are preserved.
 
-### Local demo logins
+## Core feature: screen, save, and monitor a crop case
+
+A worker uploads a photograph, selects a crop, and records a location, observation date, and symptoms. The server validates the submission and associates it with the signed-in worker. A preliminary screening result can be saved with its source-linked guidance, or the observation can be saved for monitoring when screening is unavailable.
+
+The saved case is written to MySQL and displayed in **My cases**. An owner can review it in **Farm cases** and add a dated follow-up. Earlier observations are preserved; users can compare photographs and open a printable case summary. Workers can update their own or assigned cases, while administrators maintain accounts and reference content.
+
+## Local demo logins
 
 These published passwords belong only to the seeded local presentation accounts. They must not be reused for real accounts or public deployment. All four use normal email/password login, not role switching.
 
@@ -33,10 +42,12 @@ Demo accounts and simulated screening are restricted to loopback development, or
 
 ## Fresh setup
 
-Prerequisites: Node.js/npm and a running MySQL server. Create an empty database for a fresh installation and configure its connection in `.env`; Prisma migrations create the tables. The existing project already points to `cropshield_db`.
+Prerequisites: Node.js 20 or later, npm, and a running MySQL server. Create an empty database for a fresh installation and configure its connection in `.env`; Prisma migrations create the tables. The existing project already points to `cropshield_db`.
 
 ```bash
-npm install
+git clone https://github.com/yoshanbao/cropshield.git
+cd cropshield
+npm ci
 cp .env.example .env
 # Set DATABASE_URL, AUTH_SECRET, and GEMINI_API_KEY in .env.
 # Generate a secret with: openssl rand -base64 32
@@ -60,9 +71,22 @@ CROPSHIELD_LOCAL_DEMO=true npm start
 
 Production disables the published demo accounts by default. Real accounts use their own passwords. The scripts bind to this computer at `127.0.0.1`.
 
+### Demonstrate without an API key
+
+The labeled sample workflow does not require a Gemini key. After migrating and seeding, start the local app, log in as the demo worker, and choose **Try a sample → Load rice example → Show demo result**. Save the practice case, use **Add follow-up → Load demo follow-up**, save it, then open **Compare photos** and **Print summary**. A real photo analysis requires your own server-side `GEMINI_API_KEY`; keep that value in the ignored local environment file.
+
 ## ITE 116 midterm alignment
 
-The compatible requirements are implemented: email/password login and logout, worker registration, admin-managed account creation, three seeded roles, protected role pages, server validation, Prisma migrations, and a core crop-case workflow tied to its logged-in user.
+| Assignment requirement | This repository |
+|---|---|
+| Project title, members, and short description | Included above. |
+| At least two roles with login and logout | Worker, Owner, and Administrator, with separate protected landing pages. |
+| Registration or seeded accounts for each role | Worker registration, admin-created accounts, and the local demo logins above. |
+| Block anonymous and wrong-role page access | Server page checks, API role checks, and record ownership/assignment scope. |
+| One database-backed core feature with server validation | Crop-case submission, saving, owner review, and dated monitoring. |
+| Schema migrations and a seeder | Prisma migrations and `prisma/seedWorkspace.ts`; these are not Laravel migrations. |
+| Public GitHub repository and setup instructions | Repository link below, fresh-clone commands above, and demo steps below. |
+| Laravel, Blade, controllers, and `php artisan` | **Not met by this Next.js implementation.** |
 
 **Framework conflict:** this project remains Next.js/TypeScript/Prisma/MySQL. It is not Laravel and does not use Blade, Laravel migrations/controllers, or `php artisan`. This version does not satisfy the assignment's Laravel framework requirement.
 
@@ -72,13 +96,55 @@ The earlier CropShield prototype brief explicitly requested Next.js, TypeScript,
 
 Laravel can implement the same CropShield workflow. Moving to Laravel would require replacing the current routing, server endpoints, authentication integration, and Prisma data layer, as well as adapting the screens to the chosen Laravel frontend. It was a scope decision to retain the working prototype, not a claim that Next.js is better for the course. If Laravel is the group's required stack, the team must obtain instructor approval for this version or complete a Laravel implementation before claiming compliance.
 
-Public repository: [yoshanbao/cropshield](https://github.com/yoshanbao/cropshield). Add the group member names before class submission.
+Public repository: [yoshanbao/cropshield](https://github.com/yoshanbao/cropshield).
+
+## Website screenshots
+
+These screenshots were captured from the working application using a separate temporary database containing only synthetic demo accounts and practice records. The plant images are labeled illustrations. The result below is simulated, and no live Gemini request was made for these screenshots.
+
+### 1. Login
+
+![Desktop login page with labeled email and password fields and a worker registration link](docs/screenshots/01-login-desktop.png)
+
+Users sign in with email and password. Workers can register from this page; administrators create owner and admin accounts. Each role opens its own protected workspace after login.
+
+### 2. Crop entry on a phone
+
+<img src="docs/screenshots/02-check-crop-mobile.png" alt="Mobile crop entry form with photo controls, crop selection, required observation fields, location help, and bottom navigation" width="360" />
+
+The worker adds a photo, selects a crop, and records symptoms and a recognizable location. Required fields are marked, the location field includes permanent help text, and phone navigation keeps the main functions accessible.
+
+### 3. Preliminary result and referenced care
+
+![Simulated rice leaf blast result with visible evidence, referenced care steps, and the save-and-monitor action](docs/screenshots/03-preliminary-result.png)
+
+The result follows **Possible condition → Visible evidence → Referenced care steps → Save and monitor**. **Demo result** identifies this simulation. A preliminary suggestion is not a confirmed diagnosis, and management guidance comes from the enabled reference entry.
+
+### 4. Owner's farm cases
+
+![Owner farm-case list with synthetic sample records, follow-up reminders, status labels, and add-follow-up actions](docs/screenshots/04-owner-farm-cases.png)
+
+Owners review the farm's cases, see follow-up reminders and the latest reported change, and open a case or add a follow-up. Every record pictured here is sample data; this screenshot does not expose actual farm observations.
+
+### 5. Dated photo comparison
+
+![Saved practice rice case showing earlier and later illustrative photos with their dates, symptoms, actions, and case plan](docs/screenshots/05-case-photo-comparison.png)
+
+The worker saved this practice case and a later observation to MySQL before capture. Both photos retain their dates, symptoms, and recorded actions. Reported change remains separate from case status, and **Print summary** opens the printable record. These illustrations do not demonstrate disease progression or treatment effectiveness.
+
+### 6. Administration
+
+![Administrator condition library showing disease and pest reference entries, source links, review status, and editing controls](docs/screenshots/06-admin-condition-library.png)
+
+Administrators maintain crop-condition entries, source links, content versions, and review status. The separate **User access** tab manages accounts. This is content and access administration; there is no expert case-verification workflow.
 
 ## Public repository and private data
 
 The repository contains application source, schema migrations, source-linked reference content, placeholder environment configuration, and clearly labeled synthetic demo records. It does not include the local MySQL database, real user records or password hashes, uploaded farm photographs, database backups, API keys, session secrets, local environment files, or private research documents. The schema migration creates tables; it is not a database export.
 
 Copy `.env.example` to your local `.env` and supply your own credentials. The documented demo passwords are deliberately public, restricted to local presentations, and unrelated to private account passwords. Superseded local account-seeding scripts and local planning notes are excluded. The publication starts with a clean source commit rather than uploading local session/checkpoint history.
+
+GitHub secret scanning and push protection are enabled. Public screenshots contain only the isolated demo dataset; private environment values and database backups were excluded from the upload. The source, commit contents, and screenshot metadata are checked before publication.
 
 ### Ten-minute demonstration
 
