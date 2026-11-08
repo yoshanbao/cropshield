@@ -92,7 +92,7 @@ The labeled sample workflow does not require a Gemini key. After migrating and s
 
 ### Why this version uses Next.js
 
-The earlier CropShield prototype brief explicitly requested Next.js, TypeScript, and Tailwind CSS, and the existing project already used that stack. Authentication was added to that application under the instruction to preserve CropShield and skip conflicting assignment requirements. Keeping Next.js preserved the screening, crop-case monitoring, private photographs, and MySQL integration.
+The Cropshield uses Next.js, TypeScript, and Tailwind CSS, and the existing project already used that stack and was planned to use it before. Authentication was added to that application under the instruction to preserve CropShield and skip conflicting assignment requirements. Keeping Next.js preserved the screening, crop-case monitoring, private photographs, and MySQL integration.
 
 Laravel can implement the same CropShield workflow. Moving to Laravel would require replacing the current routing, server endpoints, authentication integration, and Prisma data layer, as well as adapting the screens to the chosen Laravel frontend. It was a scope decision to retain the working prototype, not a claim that Next.js is better for the course. If Laravel is the group's required stack, the team must obtain instructor approval for this version or complete a Laravel implementation before claiming compliance.
 
