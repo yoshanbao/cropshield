@@ -1,75 +1,39 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-
-# testing
-/coverage
-
-# next.js
+/node_modules/
+/vendor/
 /.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local credentials; publish only the placeholder template.
+/public/build/
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail/
+/bootstrap/cache/*.php
+*.log
+*.cache
 .env*
 !.env.example
 .npmrc
+*.pem
 *.key
 *.p12
 *.pfx
-*.log
-
-# Local tools and account configuration
+.DS_Store
 /.agents/
 /.codex/
 /.aws/
 /.claude/
 /.idea/
 /.vscode/
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# uploaded crop images (private, served via authorized API route only)
-/uploads/
-
-# Private database backups
+/.fleet/
 /backups/
+/uploads/
 /dumps/
 *.sql
-!prisma/migrations/**/migration.sql
 *.dump
-*.sqlite
-*.sqlite3
+*.sqlite*
 *.db
-
-# Private documents, test captures, and local planning notes
 *.docx
 *.pdf
 /test-results/
 /playwright-report/
+.phpunit.result.cache
 /CROPSHIELD_AI_IMPROVEMENT_SPEC.md
-
-# Superseded local maintenance scripts; the supported seed is seedWorkspace.ts.
-# The old seed contains credentials for earlier local accounts.
-/prisma/seed.ts
-/prisma/updateOriginalSources.ts

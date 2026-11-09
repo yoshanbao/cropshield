@@ -1,3 +1,0 @@
-import {NextResponse} from 'next/server';import {prisma} from '@/lib/prisma';import {actorForRequest,scopeFor,FarmError,safeError} from '@/lib/workspace';
-export const dynamic='force-dynamic';
-export async function GET(_req:Request,{params}:{params:{id:string}}){try{const actor=await actorForRequest();const image=await prisma.farmImage.findFirst({where:{id:params.id,OR:[{uploaderId:actor.id},{observations:{some:{cropCase:scopeFor(actor)}}}]}});if(!image)throw new FarmError('Image not found.',404);return new NextResponse(new Uint8Array(image.bytes),{headers:{'Content-Type':image.mimeType,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});}catch(e){const r=safeError(e);return NextResponse.json({error:r.error},{status:r.status});}}

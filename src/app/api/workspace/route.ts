@@ -1,5 +1,0 @@
-import {NextRequest,NextResponse} from 'next/server';
-import {actorForRequest,casesFor,libraryFromDb,localDemoAvailable,safeError} from '@/lib/workspace';
-import {prisma} from '@/lib/prisma';
-export const dynamic='force-dynamic';
-export async function GET(request:NextRequest){try{const actor=await actorForRequest();const [cases,library,users,draft]=await Promise.all([casesFor(actor),libraryFromDb(),prisma.user.findMany({where:actor.role==='Worker'?{OR:[{isDemo:true},{id:actor.id}]}:{},select:{id:true,name:true,email:true,role:true,active:true,isDemo:true},orderBy:{name:'asc'}}),prisma.farmDraft.findUnique({where:{userId:actor.id}})]);return NextResponse.json({actor,cases,library,users:users.map(u=>({...u,email:actor.role==='Administrator'?u.email:undefined,assignable:u.role==='WORKER'||u.role==='FARMER',role:u.role==='ADMIN'?'Administrator':u.role==='OWNER'?'Owner':'Worker'})),draft:draft?.data||null,demoAvailable:localDemoAvailable(request),storage:'mysql'},{headers:{'Cache-Control':'no-store'}});}catch(e){const r=safeError(e);return NextResponse.json({error:r.error,demoAvailable:localDemoAvailable(request)},{status:r.status});}}
